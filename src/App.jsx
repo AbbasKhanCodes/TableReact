@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import EmptyComponent from "./Components/EmptyComponent/EmptyComponent";
+import TableComponent from "./Components/TableComponent/TableComponent";
 
 function App() {
   const navStyle = {
@@ -50,7 +50,7 @@ function App() {
               </div>
             }
           />
-          <Route path="/empty" element={<EmptyComponent />} />
+          <Route path="/table" element={<TableComponent />} />
         </Routes>
       </div>
     </Router>

@@ -17,7 +17,7 @@ const defaultData = [
   { id: 3, name: "Ali", age: 22, role: "Tester" },
 ];
 
-function EmptyComponent() {
+function TableComponent() {
   const [data, setData] = useState(() => [...defaultData]);
   const [rowSelection, setRowSelection] = useState({});
   const [globalFilter, setGlobalFilter] = useState("");
@@ -339,4 +339,4 @@ function EmptyComponent() {
   );
 }
 
-export default EmptyComponent;
+export default TableComponent;
