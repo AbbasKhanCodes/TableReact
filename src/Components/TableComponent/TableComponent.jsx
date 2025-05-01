@@ -58,11 +58,6 @@ function TableComponent() {
       return data[parseInt(index)].id;
     });
 
-    // Log the selected IDs whenever they change
-    if (ids.length > 0) {
-      console.log("First Table - Selected IDs:", ids);
-    }
-
     return ids;
   }, [rowSelection, data]);
 
@@ -72,11 +67,6 @@ function TableComponent() {
       // Convert the index to a number and get the corresponding row's ID
       return secondData[parseInt(index)].id;
     });
-
-    // Log the selected IDs whenever they change
-    if (ids.length > 0) {
-      console.log("Second Table - Selected IDs:", ids);
-    }
 
     return ids;
   }, [secondRowSelection, secondData]);
@@ -94,29 +84,11 @@ function TableComponent() {
   // First table - Function to handle row selection change
   const handleRowSelectionChange = (updatedRowSelection) => {
     setRowSelection(updatedRowSelection);
-
-    // Get the full data of selected rows
-    const selectedRows = Object.keys(updatedRowSelection).map(
-      (index) => data[parseInt(index)]
-    );
-
-    if (selectedRows.length > 0) {
-      console.log("First Table - Selected row data:", selectedRows);
-    }
   };
 
   // Second table - Function to handle row selection change
   const handleSecondRowSelectionChange = (updatedRowSelection) => {
     setSecondRowSelection(updatedRowSelection);
-
-    // Get the full data of selected rows
-    const selectedRows = Object.keys(updatedRowSelection).map(
-      (index) => secondData[parseInt(index)]
-    );
-
-    if (selectedRows.length > 0) {
-      console.log("Second Table - Selected row data:", selectedRows);
-    }
   };
 
   // First table columns
