@@ -20,6 +20,7 @@ const defaultData = [
 function EmptyComponent() {
   const [data, setData] = useState(() => [...defaultData]);
   const [rowSelection, setRowSelection] = useState({});
+  const [globalFilter, setGlobalFilter] = useState("");
 
   // Get the selected row IDs
   const selectedRowIds = useMemo(() => {
@@ -94,13 +95,21 @@ function EmptyComponent() {
     }),
   ];
 
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    setGlobalFilter(e.target.value);
+  };
+
   const table = useReactTable({
     data,
     columns,
     state: {
       rowSelection,
+      globalFilter,
     },
     onRowSelectionChange: handleRowSelectionChange,
+    onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: "includesString",
     enableRowSelection: true,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -111,12 +120,68 @@ function EmptyComponent() {
   return (
     <div style={{ padding: "20px", fontFamily: "Segoe UI, sans-serif" }}>
       <h2 style={{ color: "#4A90E2", marginBottom: "20px" }}>
-        Data Table with Row Selection
+        Data Table with Search and Row Selection
       </h2>
       <p style={{ marginBottom: "20px", color: "#666" }}>
-        Select rows by checking the checkboxes. The selected row IDs will be
-        displayed below the table.
+        Use the search box to filter the table. Select rows by checking the
+        checkboxes. The selected row IDs will be displayed below the table.
       </p>
+
+      {/* Search Input */}
+      <div
+        style={{
+          marginBottom: "20px",
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          maxWidth: "400px",
+        }}
+      >
+        <input
+          type="text"
+          value={globalFilter ?? ""}
+          onChange={handleSearchChange}
+          placeholder="Search all columns..."
+          style={{
+            padding: "10px 12px",
+            fontSize: "14px",
+            border: "1px solid #ddd",
+            borderRadius: "6px",
+            width: "100%",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
+            outline: "none",
+            transition: "border-color 0.3s",
+          }}
+        />
+        {globalFilter && (
+          <button
+            onClick={() => setGlobalFilter("")}
+            style={{
+              backgroundColor: "#4A90E2",
+              color: "white",
+              border: "none",
+              borderRadius: "6px",
+              padding: "10px 12px",
+              cursor: "pointer",
+              fontSize: "14px",
+              fontWeight: "bold",
+              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+            }}
+          >
+            Clear
+          </button>
+        )}
+      </div>
+
+      {/* Search results count */}
+      {globalFilter && (
+        <div style={{ marginBottom: "10px", fontSize: "14px", color: "#666" }}>
+          Found {table.getRowModel().rows.length} result
+          {table.getRowModel().rows.length !== 1 ? "s" : ""} for "{globalFilter}
+          "
+        </div>
+      )}
+
       <table
         style={{
           width: "100%",
@@ -151,37 +216,52 @@ function EmptyComponent() {
         </thead>
 
         <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr
-              key={row.id}
-              style={{
-                background: row.getIsSelected() ? "#e6f7ff" : "#fff",
-                borderBottom: "1px solid #f0f0f0",
-                transition: "background 0.3s",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = "#f9f9f9")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = row.getIsSelected()
-                  ? "#e6f7ff"
-                  : "#fff")
-              }
-            >
-              {row.getVisibleCells().map((cell) => (
-                <td
-                  key={cell.id}
-                  style={{
-                    padding: "12px 16px",
-                    fontSize: "14px",
-                    color: "#333",
-                  }}
-                >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
+          {table.getRowModel().rows.length === 0 ? (
+            <tr>
+              <td
+                colSpan={columns.length}
+                style={{
+                  textAlign: "center",
+                  padding: "30px",
+                  color: "#666",
+                }}
+              >
+                No results found
+              </td>
             </tr>
-          ))}
+          ) : (
+            table.getRowModel().rows.map((row) => (
+              <tr
+                key={row.id}
+                style={{
+                  background: row.getIsSelected() ? "#e6f7ff" : "#fff",
+                  borderBottom: "1px solid #f0f0f0",
+                  transition: "background 0.3s",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#f9f9f9")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = row.getIsSelected()
+                    ? "#e6f7ff"
+                    : "#fff")
+                }
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <td
+                    key={cell.id}
+                    style={{
+                      padding: "12px 16px",
+                      fontSize: "14px",
+                      color: "#333",
+                    }}
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
 
