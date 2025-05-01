@@ -45,11 +45,16 @@ function App() {
           <Route
             path="/"
             element={
-              <div style={{ padding: "20px", textAlign: "center" }}>
-                Home Page
+              <div>
+                <h1 class="text-3xl font-bold underline">Hello world!</h1>
+
+                <div style={{ padding: "20px", textAlign: "center" }}>
+                  Home Page
+                </div>
               </div>
             }
           />
+
           <Route path="/table" element={<TableComponent />} />
         </Routes>
       </div>
