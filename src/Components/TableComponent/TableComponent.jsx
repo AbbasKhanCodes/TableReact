@@ -15,6 +15,15 @@ const defaultData = [
   { id: 1, name: "Abbas", age: 25, role: "Developer" },
   { id: 2, name: "Sara", age: 28, role: "Designer" },
   { id: 3, name: "Ali", age: 22, role: "Tester" },
+  { id: 4, name: "Fatima", age: 30, role: "Project Manager" },
+  { id: 5, name: "Hassan", age: 27, role: "Developer" },
+  { id: 6, name: "Zainab", age: 24, role: "UI/UX Designer" },
+  { id: 7, name: "Omar", age: 29, role: "DevOps Engineer" },
+  { id: 8, name: "Layla", age: 26, role: "QA Engineer" },
+  { id: 9, name: "Yusuf", age: 31, role: "Backend Developer" },
+  { id: 10, name: "Noor", age: 23, role: "Frontend Developer" },
+  { id: 11, name: "Karim", age: 32, role: "System Analyst" },
+  { id: 12, name: "Amina", age: 29, role: "Database Administrator" },
 ];
 
 // Second table data with 3 columns
@@ -45,6 +54,10 @@ function TableComponent() {
   const [data, setData] = useState(() => [...defaultData]);
   const [rowSelection, setRowSelection] = useState({});
   const [globalFilter, setGlobalFilter] = useState("");
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 5,
+  });
 
   // Second table state
   const [secondData, setSecondData] = useState(() => [...secondTableData]);
@@ -191,7 +204,9 @@ function TableComponent() {
     state: {
       rowSelection,
       globalFilter,
+      pagination,
     },
+    onPaginationChange: setPagination,
     onRowSelectionChange: handleRowSelectionChange,
     onGlobalFilterChange: setGlobalFilter,
     globalFilterFn: "includesString",
@@ -200,6 +215,8 @@ function TableComponent() {
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    manualPagination: false,
+    pageCount: Math.ceil(data.length / pagination.pageSize),
   });
 
   // Second table instance
@@ -307,6 +324,65 @@ function TableComponent() {
           )}
         </tbody>
       </table>
+
+      {/* First Table Pagination Controls */}
+      <div className="mt-4 flex items-center justify-between">
+        <div className="flex items-center gap-2 text-sm">
+          <span className="text-gray-600">
+            Page {pagination.pageIndex + 1} of{" "}
+            {table.getPageCount() ||
+              Math.ceil(data.length / pagination.pageSize)}
+          </span>
+          <span className="text-gray-600">
+            | Showing{" "}
+            {Math.min(pagination.pageSize, table.getRowModel().rows.length)} of{" "}
+            {data.length} employees
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            className="bg-blue-500 text-white px-3 py-1 rounded text-sm disabled:opacity-50"
+            onClick={() => table.setPageIndex(0)}
+            disabled={pagination.pageIndex === 0}
+          >
+            {"<<"}
+          </button>
+          <button
+            className="bg-blue-500 text-white px-3 py-1 rounded text-sm disabled:opacity-50"
+            onClick={() => table.previousPage()}
+            disabled={pagination.pageIndex === 0}
+          >
+            {"<"}
+          </button>
+          <button
+            className="bg-blue-500 text-white px-3 py-1 rounded text-sm disabled:opacity-50"
+            onClick={() => table.nextPage()}
+            disabled={pagination.pageIndex >= table.getPageCount() - 1}
+          >
+            {">"}
+          </button>
+          <button
+            className="bg-blue-500 text-white px-3 py-1 rounded text-sm disabled:opacity-50"
+            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+            disabled={pagination.pageIndex >= table.getPageCount() - 1}
+          >
+            {">>"}
+          </button>
+          <select
+            className="border border-gray-300 rounded p-1 text-sm"
+            value={pagination.pageSize}
+            onChange={(e) => {
+              table.setPageSize(Number(e.target.value));
+            }}
+          >
+            {[5, 10, 20].map((pageSize) => (
+              <option key={pageSize} value={pageSize}>
+                Show {pageSize}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
 
       {/* First Table Selection Info */}
       <div className="mt-5 text-sm text-gray-700 mb-10">
