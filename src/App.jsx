@@ -1,10 +1,59 @@
-import EmailForm from "./Components/Email/Email";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import EmptyComponent from "./Components/EmptyComponent/EmptyComponent";
 
 function App() {
+  const navStyle = {
+    background: "#f4f4f4",
+    padding: "10px",
+    marginBottom: "20px",
+  };
+
+  const navListStyle = {
+    display: "flex",
+    listStyle: "none",
+    gap: "20px",
+  };
+
+  const linkStyle = {
+    textDecoration: "none",
+    color: "#333",
+    fontWeight: "bold",
+    padding: "5px 10px",
+    borderRadius: "4px",
+    transition: "background-color 0.3s",
+  };
+
   return (
-    <div>
-      <EmailForm />
-    </div>
+    <Router>
+      <div>
+        <nav style={navStyle}>
+          <ul style={navListStyle}>
+            <li>
+              <Link to="/" style={linkStyle}>
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link to="/empty" style={linkStyle}>
+                Empty Component
+              </Link>
+            </li>
+          </ul>
+        </nav>
+
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <div style={{ padding: "20px", textAlign: "center" }}>
+                Home Page
+              </div>
+            }
+          />
+          <Route path="/empty" element={<EmptyComponent />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
