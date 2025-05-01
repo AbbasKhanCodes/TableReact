@@ -114,19 +114,17 @@ function TableComponent() {
     columnHelper.accessor("name", {
       header: "Name",
       cell: (info) => (
-        <span style={{ color: "blue", fontWeight: "bold" }}>
-          {info.getValue()}
-        </span>
+        <span className="text-blue-600 font-bold">{info.getValue()}</span>
       ),
     }),
     columnHelper.accessor("age", {
       header: "Age",
-      cell: (info) => <span style={{ color: "green" }}>{info.getValue()}</span>,
+      cell: (info) => <span className="text-green-600">{info.getValue()}</span>,
     }),
     columnHelper.accessor("role", {
       header: "Role",
       cell: (info) => (
-        <span style={{ color: "purple" }}>{info.getValue()}</span>
+        <span className="text-purple-600">{info.getValue()}</span>
       ),
     }),
   ];
@@ -154,26 +152,24 @@ function TableComponent() {
     columnHelper.accessor("project", {
       header: "Project",
       cell: (info) => (
-        <span style={{ color: "blue", fontWeight: "bold" }}>
-          {info.getValue()}
-        </span>
+        <span className="text-blue-600 font-bold">{info.getValue()}</span>
       ),
     }),
     columnHelper.accessor("status", {
       header: "Status",
       cell: (info) => {
         const status = info.getValue();
-        let color = "gray";
-        if (status === "In Progress") color = "orange";
-        if (status === "Completed") color = "green";
-        if (status === "Planning") color = "blue";
-        return <span style={{ color }}>{status}</span>;
+        let statusClass = "text-gray-500";
+        if (status === "In Progress") statusClass = "text-orange-500";
+        if (status === "Completed") statusClass = "text-green-500";
+        if (status === "Planning") statusClass = "text-blue-500";
+        return <span className={statusClass}>{status}</span>;
       },
     }),
     columnHelper.accessor("deadline", {
       header: "Deadline",
       cell: (info) => (
-        <span style={{ color: "purple" }}>{info.getValue()}</span>
+        <span className="text-purple-600">{info.getValue()}</span>
       ),
     }),
   ];
@@ -225,56 +221,29 @@ function TableComponent() {
   });
 
   return (
-    <div style={{ padding: "20px", fontFamily: "Segoe UI, sans-serif" }}>
+    <div className="p-5 font-sans">
       {/* First Table */}
-      <h2 style={{ color: "#4A90E2", marginBottom: "20px" }}>
+      <h2 className="text-blue-500 mb-5 text-xl font-semibold">
         Employee Data Table
       </h2>
-      <p style={{ marginBottom: "20px", color: "#666" }}>
+      <p className="mb-5 text-gray-600">
         Use the search box to filter the table. Select rows by checking the
         checkboxes. The selected row IDs will be displayed below the table.
       </p>
 
       {/* First Table Search Input */}
-      <div
-        style={{
-          marginBottom: "20px",
-          display: "flex",
-          alignItems: "center",
-          gap: "10px",
-          maxWidth: "400px",
-        }}
-      >
+      <div className="mb-5 flex items-center gap-2.5 max-w-md">
         <input
           type="text"
           value={globalFilter ?? ""}
           onChange={handleSearchChange}
           placeholder="Search employees..."
-          style={{
-            padding: "10px 12px",
-            fontSize: "14px",
-            border: "1px solid #ddd",
-            borderRadius: "6px",
-            width: "100%",
-            boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
-            outline: "none",
-            transition: "border-color 0.3s",
-          }}
+          className="p-2.5 text-sm border border-gray-300 rounded-md w-full shadow-sm outline-none transition-colors"
         />
         {globalFilter && (
           <button
             onClick={() => setGlobalFilter("")}
-            style={{
-              backgroundColor: "#4A90E2",
-              color: "white",
-              border: "none",
-              borderRadius: "6px",
-              padding: "10px 12px",
-              cursor: "pointer",
-              fontSize: "14px",
-              fontWeight: "bold",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-            }}
+            className="bg-blue-500 text-white border-none rounded-md py-2.5 px-3 cursor-pointer text-sm font-bold shadow-sm"
           >
             Clear
           </button>
@@ -283,7 +252,7 @@ function TableComponent() {
 
       {/* First Table Search results count */}
       {globalFilter && (
-        <div style={{ marginBottom: "10px", fontSize: "14px", color: "#666" }}>
+        <div className="mb-2.5 text-sm text-gray-600">
           Found {table.getRowModel().rows.length} result
           {table.getRowModel().rows.length !== 1 ? "s" : ""} for "{globalFilter}
           "
@@ -291,28 +260,14 @@ function TableComponent() {
       )}
 
       {/* First Table */}
-      <table
-        style={{
-          width: "100%",
-          borderCollapse: "separate",
-          borderSpacing: 0,
-          boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-          borderRadius: "10px",
-          overflow: "hidden",
-        }}
-      >
-        <thead style={{ backgroundColor: "#4A90E2", color: "white" }}>
+      <table className="w-full border-separate border-spacing-0 shadow-md rounded-lg overflow-hidden">
+        <thead className="bg-blue-500 text-white">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <th
                   key={header.id}
-                  style={{
-                    padding: "12px 16px",
-                    textAlign: "left",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                  }}
+                  className="p-3 text-left text-sm font-semibold"
                 >
                   {flexRender(
                     header.column.columnDef.header,
@@ -329,11 +284,7 @@ function TableComponent() {
             <tr>
               <td
                 colSpan={columns.length}
-                style={{
-                  textAlign: "center",
-                  padding: "30px",
-                  color: "#666",
-                }}
+                className="text-center py-8 px-4 text-gray-600"
               >
                 No results found
               </td>
@@ -342,29 +293,12 @@ function TableComponent() {
             table.getRowModel().rows.map((row) => (
               <tr
                 key={row.id}
-                style={{
-                  background: row.getIsSelected() ? "#e6f7ff" : "#fff",
-                  borderBottom: "1px solid #f0f0f0",
-                  transition: "background 0.3s",
-                }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#f9f9f9")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.backgroundColor = row.getIsSelected()
-                    ? "#e6f7ff"
-                    : "#fff")
-                }
+                className={`${
+                  row.getIsSelected() ? "bg-blue-50" : "bg-white"
+                } border-b border-gray-100 transition-colors hover:bg-gray-50`}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <td
-                    key={cell.id}
-                    style={{
-                      padding: "12px 16px",
-                      fontSize: "14px",
-                      color: "#333",
-                    }}
-                  >
+                  <td key={cell.id} className="p-3 text-sm text-gray-800">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}
@@ -375,21 +309,8 @@ function TableComponent() {
       </table>
 
       {/* First Table Selection Info */}
-      <div
-        style={{
-          marginTop: "20px",
-          fontSize: "14px",
-          color: "#555",
-          marginBottom: "40px",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
+      <div className="mt-5 text-sm text-gray-700 mb-10">
+        <div className="flex items-center justify-between">
           <div>
             Selected Employees:{" "}
             <strong>{Object.keys(rowSelection).length}</strong>
@@ -397,16 +318,7 @@ function TableComponent() {
           {selectedRowIds.length > 0 && (
             <button
               onClick={clearSelections}
-              style={{
-                backgroundColor: "#ff4d4f",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                padding: "5px 10px",
-                cursor: "pointer",
-                fontSize: "12px",
-                fontWeight: "bold",
-              }}
+              className="bg-red-500 text-white border-none rounded px-2.5 py-1 cursor-pointer text-xs font-bold"
             >
               Clear Selections
             </button>
@@ -414,34 +326,15 @@ function TableComponent() {
         </div>
 
         {selectedRowIds.length > 0 && (
-          <div style={{ marginTop: "10px" }}>
+          <div className="mt-2.5">
             <div>Selected Employees:</div>
-            <div
-              style={{
-                marginTop: "5px",
-                padding: "10px",
-                backgroundColor: "#f5f5f5",
-                borderRadius: "5px",
-                display: "flex",
-                flexWrap: "wrap",
-                gap: "10px",
-              }}
-            >
+            <div className="mt-1 p-2.5 bg-gray-100 rounded flex flex-wrap gap-2.5">
               {Object.keys(rowSelection).map((index) => {
                 const row = data[parseInt(index)];
                 return (
                   <span
                     key={row.id}
-                    style={{
-                      backgroundColor: "#4A90E2",
-                      color: "white",
-                      padding: "5px 10px",
-                      borderRadius: "4px",
-                      fontSize: "12px",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "3px",
-                    }}
+                    className="bg-blue-500 text-white px-2.5 py-1 rounded text-xs flex flex-col gap-0.5"
                   >
                     <strong>ID: {row.id}</strong>
                     <small>Name: {row.name}</small>
@@ -455,55 +348,28 @@ function TableComponent() {
       </div>
 
       {/* Second Table */}
-      <h2 style={{ color: "#4A90E2", marginBottom: "20px" }}>
+      <h2 className="text-blue-500 mb-5 text-xl font-semibold">
         Projects Data Table
       </h2>
-      <p style={{ marginBottom: "20px", color: "#666" }}>
+      <p className="mb-5 text-gray-600">
         Use the search box to filter the projects table. Select rows by checking
         the checkboxes. The selected project IDs will be displayed below the
         table.
       </p>
 
       {/* Second Table Search Input */}
-      <div
-        style={{
-          marginBottom: "20px",
-          display: "flex",
-          alignItems: "center",
-          gap: "10px",
-          maxWidth: "400px",
-        }}
-      >
+      <div className="mb-5 flex items-center gap-2.5 max-w-md">
         <input
           type="text"
           value={secondGlobalFilter ?? ""}
           onChange={handleSecondSearchChange}
           placeholder="Search projects..."
-          style={{
-            padding: "10px 12px",
-            fontSize: "14px",
-            border: "1px solid #ddd",
-            borderRadius: "6px",
-            width: "100%",
-            boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
-            outline: "none",
-            transition: "border-color 0.3s",
-          }}
+          className="p-2.5 text-sm border border-gray-300 rounded-md w-full shadow-sm outline-none transition-colors"
         />
         {secondGlobalFilter && (
           <button
             onClick={() => setSecondGlobalFilter("")}
-            style={{
-              backgroundColor: "#4A90E2",
-              color: "white",
-              border: "none",
-              borderRadius: "6px",
-              padding: "10px 12px",
-              cursor: "pointer",
-              fontSize: "14px",
-              fontWeight: "bold",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-            }}
+            className="bg-blue-500 text-white border-none rounded-md py-2.5 px-3 cursor-pointer text-sm font-bold shadow-sm"
           >
             Clear
           </button>
@@ -512,7 +378,7 @@ function TableComponent() {
 
       {/* Second Table Search results count */}
       {secondGlobalFilter && (
-        <div style={{ marginBottom: "10px", fontSize: "14px", color: "#666" }}>
+        <div className="mb-2.5 text-sm text-gray-600">
           Found {secondTable.getRowModel().rows.length} result
           {secondTable.getRowModel().rows.length !== 1 ? "s" : ""} for "
           {secondGlobalFilter}"
@@ -520,28 +386,14 @@ function TableComponent() {
       )}
 
       {/* Second Table */}
-      <table
-        style={{
-          width: "100%",
-          borderCollapse: "separate",
-          borderSpacing: 0,
-          boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-          borderRadius: "10px",
-          overflow: "hidden",
-        }}
-      >
-        <thead style={{ backgroundColor: "#4A90E2", color: "white" }}>
+      <table className="w-full border-separate border-spacing-0 shadow-md rounded-lg overflow-hidden">
+        <thead className="bg-blue-500 text-white">
           {secondTable.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <th
                   key={header.id}
-                  style={{
-                    padding: "12px 16px",
-                    textAlign: "left",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                  }}
+                  className="p-3 text-left text-sm font-semibold"
                 >
                   {flexRender(
                     header.column.columnDef.header,
@@ -558,11 +410,7 @@ function TableComponent() {
             <tr>
               <td
                 colSpan={secondColumns.length}
-                style={{
-                  textAlign: "center",
-                  padding: "30px",
-                  color: "#666",
-                }}
+                className="text-center py-8 px-4 text-gray-600"
               >
                 No results found
               </td>
@@ -571,29 +419,12 @@ function TableComponent() {
             secondTable.getRowModel().rows.map((row) => (
               <tr
                 key={row.id}
-                style={{
-                  background: row.getIsSelected() ? "#e6f7ff" : "#fff",
-                  borderBottom: "1px solid #f0f0f0",
-                  transition: "background 0.3s",
-                }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#f9f9f9")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.backgroundColor = row.getIsSelected()
-                    ? "#e6f7ff"
-                    : "#fff")
-                }
+                className={`${
+                  row.getIsSelected() ? "bg-blue-50" : "bg-white"
+                } border-b border-gray-100 transition-colors hover:bg-gray-50`}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <td
-                    key={cell.id}
-                    style={{
-                      padding: "12px 16px",
-                      fontSize: "14px",
-                      color: "#333",
-                    }}
-                  >
+                  <td key={cell.id} className="p-3 text-sm text-gray-800">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}
@@ -604,14 +435,8 @@ function TableComponent() {
       </table>
 
       {/* Second Table Selection Info */}
-      <div style={{ marginTop: "20px", fontSize: "14px", color: "#555" }}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
+      <div className="mt-5 text-sm text-gray-700">
+        <div className="flex items-center justify-between">
           <div>
             Selected Projects:{" "}
             <strong>{Object.keys(secondRowSelection).length}</strong>
@@ -619,16 +444,7 @@ function TableComponent() {
           {secondSelectedRowIds.length > 0 && (
             <button
               onClick={clearSecondSelections}
-              style={{
-                backgroundColor: "#ff4d4f",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                padding: "5px 10px",
-                cursor: "pointer",
-                fontSize: "12px",
-                fontWeight: "bold",
-              }}
+              className="bg-red-500 text-white border-none rounded px-2.5 py-1 cursor-pointer text-xs font-bold"
             >
               Clear Selections
             </button>
@@ -636,34 +452,15 @@ function TableComponent() {
         </div>
 
         {secondSelectedRowIds.length > 0 && (
-          <div style={{ marginTop: "10px" }}>
+          <div className="mt-2.5">
             <div>Selected Projects:</div>
-            <div
-              style={{
-                marginTop: "5px",
-                padding: "10px",
-                backgroundColor: "#f5f5f5",
-                borderRadius: "5px",
-                display: "flex",
-                flexWrap: "wrap",
-                gap: "10px",
-              }}
-            >
+            <div className="mt-1 p-2.5 bg-gray-100 rounded flex flex-wrap gap-2.5">
               {Object.keys(secondRowSelection).map((index) => {
                 const row = secondData[parseInt(index)];
                 return (
                   <span
                     key={row.id}
-                    style={{
-                      backgroundColor: "#4A90E2",
-                      color: "white",
-                      padding: "5px 10px",
-                      borderRadius: "4px",
-                      fontSize: "12px",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "3px",
-                    }}
+                    className="bg-blue-500 text-white px-2.5 py-1 rounded text-xs flex flex-col gap-0.5"
                   >
                     <strong>ID: {row.id}</strong>
                     <small>Project: {row.project}</small>
