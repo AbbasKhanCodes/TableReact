@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -21,10 +21,51 @@ function EmptyComponent() {
   const [data, setData] = useState(() => [...defaultData]);
   const [rowSelection, setRowSelection] = useState({});
 
+  // Get the selected row IDs
+  const selectedRowIds = useMemo(() => {
+    const ids = Object.keys(rowSelection).map((index) => {
+      // Convert the index to a number and get the corresponding row's ID
+      return data[parseInt(index)].id;
+    });
+
+    // Log the selected IDs whenever they change
+    if (ids.length > 0) {
+      console.log("Selected IDs:", ids);
+    }
+
+    return ids;
+  }, [rowSelection, data]);
+
+  // Function to clear all selections
+  const clearSelections = () => {
+    setRowSelection({});
+  };
+
+  // Function to handle row selection change
+  const handleRowSelectionChange = (updatedRowSelection) => {
+    setRowSelection(updatedRowSelection);
+
+    // Get the full data of selected rows
+    const selectedRows = Object.keys(updatedRowSelection).map(
+      (index) => data[parseInt(index)]
+    );
+
+    if (selectedRows.length > 0) {
+      console.log("Selected row data:", selectedRows);
+    }
+  };
+
   const columns = [
     {
       id: "select",
-      header: () => <input type="checkbox" disabled />, // master checkbox logic can be added
+      header: ({ table }) => (
+        <input
+          type="checkbox"
+          checked={table.getIsAllRowsSelected()}
+          onChange={table.getToggleAllRowsSelectedHandler()}
+          title="Select all rows"
+        />
+      ),
       cell: ({ row }) => (
         <input
           type="checkbox"
@@ -59,7 +100,7 @@ function EmptyComponent() {
     state: {
       rowSelection,
     },
-    onRowSelectionChange: setRowSelection,
+    onRowSelectionChange: handleRowSelectionChange,
     enableRowSelection: true,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -69,6 +110,13 @@ function EmptyComponent() {
 
   return (
     <div style={{ padding: "20px", fontFamily: "Segoe UI, sans-serif" }}>
+      <h2 style={{ color: "#4A90E2", marginBottom: "20px" }}>
+        Data Table with Row Selection
+      </h2>
+      <p style={{ marginBottom: "20px", color: "#666" }}>
+        Select rows by checking the checkboxes. The selected row IDs will be
+        displayed below the table.
+      </p>
       <table
         style={{
           width: "100%",
@@ -137,8 +185,75 @@ function EmptyComponent() {
         </tbody>
       </table>
 
-      <div style={{ marginTop: "10px", fontSize: "14px", color: "#555" }}>
-        Selected Rows: <strong>{Object.keys(rowSelection).length}</strong>
+      <div style={{ marginTop: "20px", fontSize: "14px", color: "#555" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <div>
+            Selected Rows: <strong>{Object.keys(rowSelection).length}</strong>
+          </div>
+          {selectedRowIds.length > 0 && (
+            <button
+              onClick={clearSelections}
+              style={{
+                backgroundColor: "#ff4d4f",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                padding: "5px 10px",
+                cursor: "pointer",
+                fontSize: "12px",
+                fontWeight: "bold",
+              }}
+            >
+              Clear Selections
+            </button>
+          )}
+        </div>
+
+        {selectedRowIds.length > 0 && (
+          <div style={{ marginTop: "10px" }}>
+            <div>Selected IDs:</div>
+            <div
+              style={{
+                marginTop: "5px",
+                padding: "10px",
+                backgroundColor: "#f5f5f5",
+                borderRadius: "5px",
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "10px",
+              }}
+            >
+              {Object.keys(rowSelection).map((index) => {
+                const row = data[parseInt(index)];
+                return (
+                  <span
+                    key={row.id}
+                    style={{
+                      backgroundColor: "#4A90E2",
+                      color: "white",
+                      padding: "5px 10px",
+                      borderRadius: "4px",
+                      fontSize: "12px",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "3px",
+                    }}
+                  >
+                    <strong>ID: {row.id}</strong>
+                    <small>Name: {row.name}</small>
+                    <small>Role: {row.role}</small>
+                  </span>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
